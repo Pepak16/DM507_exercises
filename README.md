@@ -1,1 +1,0 @@
-DM507_exercises
