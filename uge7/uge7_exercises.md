@@ -81,12 +81,31 @@ Observe that the **while** loop of lines 5–7 of the INSERTION-SORT procedure i
 
 <b>ANSWER:</b>
 
+    
+
 ## 6. Exercise 2.3-1 (page 37)
 Using Figure 2.4 as a model, illustrate the operation of merge sort on the array $A = \langle 3,41,52,26,38,57,9,49\rangle$.
 
+<img src="images/Figure 2.4.png" border="0" >*Figur 2.4*</img>
+
 <b>ANSWER:</b>
+
+The array to mergesort is the following
+$A = \langle 3,41,52,26,38,57,9,49\rangle$
+
+The process of mergesort:
+
+                   9,26,38,39,41,49,57
+                    /             \
+              26,39,41,52     9,38,49,57
+               /     \         /      \ 
+            39,41   26,52    38,57   9,49
+            /\      /\       /\      /\ 
+          39  41  52  26   38  57  9   49
     
-    ??
+The final order of the array after mergesort is:
+    
+    9,26,38,39,41,49,57
 
 ## 7. Exercise 2.3-2 (page 37)
 Rewrite the <span style="font-family:Rieux Minus;">MERGE</span> procedure so that it does not use sentinels, instead stopping once either array L or R has had all its elements copied back to A and then copying the remainder of the other array back into A.
@@ -95,15 +114,61 @@ Rewrite the <span style="font-family:Rieux Minus;">MERGE</span> procedure so tha
 
 <b>ANSWER:</b>
     
-    ??
+    merge(A, p, q, r).
+        i = 0 : j = 0.
+        for k = p to r:
+            if i >= length[L]
+                A[k] = R[j]; 
+                j++;
+            elseif j >= length[R]:
+                A[k] = L[i]; 
+                i++;
+            else
+                if L[i] <= R[j]:
+                    A[k] = L[i]; 
+                    i++;
+                else
+                    A[k] = R[j]; 
+                    j++;
 
 ## 8. Exercise 2-4 (page 41, a, b, c)
-Let AŒ1::n􏰀 be an array of n distinct numbers. If i < j and AŒi􏰀 > AŒj􏰀, then the pair .i; j / is called an inversion of A.
+Let $A[1..n]$ be an array of n distinct numbers. If $i < j$ and $A[i] > A[j]$, then the pair $(i,j)$ is called an ***inversion*** of A.
+
+**a.** List the five inversions of the array $\langle 2,3,8,6,1\rangle$
+
+**b.** What array with elements from the set $\{ 1,2,...,n \}$ has the most inversions? 
+<br>How many does it have?
+
+**c.** What is the relationship between the running time of insertion sort and the number of inversions in the input array? <br>Justify your answer.
+
+**d.** Give an algorithm that determines the number of inversions in any permutation on *n* elements in $\Theta(n \lg n)$ worst-case time. (*Hint:* Modify merge sort.)
 
 
 <b>ANSWER:</b>
     
-    ??
+Inversions of array = when elements in the array follows this rule: $i < j$ and $A[i] > A[j]$
+
+    a. The five inversions of the array containing the following elements: 2,3,8,6,1 is
+
+    e.g.:       i : j
+        
+    indexes:    2 : 1
+                3 : 1
+                8 : 1
+                6 : 1
+                8 : 6
+
+
+
+                  i  <  j     A[i] > A[j]
+    elements:   *A[2] : A[1]  =   8 : 3
+
+
+    b. 
+    c. 
+    d. 
+    
+ **i er før j i arrayet, derfor 2 < 1, altså i < j*
 
 ## 9. Exercise 2.3-7 (page 39)
 Describe a $\Theta(n \lg n)$-time algorithm that, given a set S of n integers and another integer x, determines whether or not there exist two elements in S whose sum is exactly x.
@@ -113,7 +178,6 @@ Describe a $\Theta(n \lg n)$-time algorithm that, given a set S of n integers an
     ??
 
 <h1>Eksamenatorier II:</h1>
-
 
 ## 1. 
 
