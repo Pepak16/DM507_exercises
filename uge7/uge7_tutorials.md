@@ -1,6 +1,6 @@
-                        Video tutorials used for exercises
+<h1>Video tutorials used for exercises</h1>
 
-## <h1> Big O Notation guide </h1>
+## <h2> Big O Notation guide </h2>
 
 This video will help you understand about the Big O notation and linear vs quadratic comparisons with graphs.
 
@@ -8,7 +8,7 @@ This video will help you understand about the Big O notation and linear vs quadr
 
 </br>
 
-## <h1> Asymptotic Notation guide </h1>
+## <h2> Asymptotic Notation guide </h2>
 
 This video explains some of the important aspects of asymptotic notations, such as "Big O", "Theta" and "Omega". 
 
@@ -16,12 +16,14 @@ This video explains some of the important aspects of asymptotic notations, such 
 
 </br>
 
-## <h1> Best, worst and average case (Wikipedia) </h1>
+## <h2> Best, worst and average case (Wikipedia) </h2>
 More details about these can be found on [this Wikipedia site](https://en.wikipedia.org/wiki/Best,_worst_and_average_case).
 
 </br>
 
 
-## <h1> **Extra:** Markdown language guide </h1>
-For more guide on Markdown language, check [this github repository](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)  out.
+## <h2> **Extra:** Markdown language guide </h2>
+For more guide on Markdown language, check [this github repository](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) out.
 
+## <h2> **Extra:** Latex Math symbols guide </h2>
+For more details on what to write for a given symbol in markdown+math plugin, use [this latex math symbol guide website.](http://web.ift.uib.no/Teori/KURS/WRK/TeX/symALL.html)
