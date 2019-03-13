@@ -81,7 +81,10 @@ Observe that the **while** loop of lines 5–7 of the INSERTION-SORT procedure i
 
 <b>ANSWER:</b>
 
-    
+The running time for Insertion-Sort is $\Theta(n^2)$ because there is 2 loops in the algorithm, the second loop nested inside the first loop. 
+<br>The first loop’s runtime is retained as $\Theta(n)$. 
+<br>
+When the second loop with runtime $\Theta(n)$ is replaced with binary Search then the second loop gets a runtime of $\Theta(\lg n)$. <br>So the worst case run time goes from $\Theta(n^2)$ to $\Theta(n \log n)$.
 
 ## 6. Exercise 2.3-1 (page 37)
 Using Figure 2.4 as a model, illustrate the operation of merge sort on the array $A = \langle 3,41,52,26,38,57,9,49\rangle$.
@@ -148,7 +151,9 @@ Let $A[1..n]$ be an array of n distinct numbers. If $i < j$ and $A[i] > A[j]$, t
     
 Inversions of array = when elements in the array follows this rule: $i < j$ and $A[i] > A[j]$
 
-    a. The five inversions of the array containing the following elements: 2,3,8,6,1 is
+    a. 
+
+    The five inversions of the array containing the following elements: 2,3,8,6,1 is
 
     e.g.:       i : j
         
@@ -161,12 +166,35 @@ Inversions of array = when elements in the array follows this rule: $i < j$ and 
 
 
                   i  <  j     A[i] > A[j]
-    elements:   *A[2] : A[1]  =   8 : 3
-
+    example:   *A[2] : A[1]  =   8 : 3
 
     b. 
+    
+    {5,4,3,2,1}
+        
+        inversions: 
+        5:4
+        5:3
+        5:2
+        5:1
+        4:3
+        4:2
+        4:1
+        3:2
+        3:1
+        2:1
+
+    The array where biggest element n is always first and all elements are placed in decreasing/ inversed order, gives the most inversions.
+
+    Assuming the statement above is true, if a new element k is added, the amount of inversions increases by (n - index of new element k) - 1.
+
     c. 
-    d. 
+
+    The higher the number of inversions in the input array, the worse the running time of insertion sort.
+
+    For example: if all elements are placed in decreasing order,and we want an increasing order, then we have the worst case at hand.
+
+    d. ??
     
  **i er før j i arrayet, derfor 2 < 1, altså i < j*
 
@@ -175,7 +203,17 @@ Describe a $\Theta(n \lg n)$-time algorithm that, given a set S of n integers an
 
 <b>ANSWER:</b>
     
-    ??
+We can use Merge Sort (?)
+First you divide the input set S into sets of 2. 
+Then you sort those sets individually. 
+Then the merging of 2 sets at a time happens, where they are sorted during the merging.
+We have now halved the amount of sets left. 
+We then rinse and repeat the merging of sets until we are left with a completely sorted array.
+
+$\Theta(n \lg n)+\Theta(n \lg n)$
+
+maybe we could add the binary search to find the pairs that sums to X.
+
 
 <h1>Eksamenatorier II:</h1>
 
