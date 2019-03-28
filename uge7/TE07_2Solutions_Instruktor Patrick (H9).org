@@ -1,0 +1,248 @@
+* 1. Insertion Sort
+#+BEGIN_SRC java :classname InsertionSorter :cmdline "InsertionSorter" :results output
+  import java.util.Collections;
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.concurrent.ThreadLocalRandom;
+
+  public class InsertionSorter {
+      public static void InsertionSort(List<Integer> A) {
+          for(int j = 1; j < A.size(); j++) {
+              Integer key = A.get(j);
+              //Insert A[j] into the sorted sequence A[1..j-1]
+              int i = j-1;
+              while(i >= 0 && A.get(i) > key) {
+                  A.set(i+1, A.get(i));
+                  i = i - 1;
+              }
+              A.set(i+1, key);
+          }
+      }
+
+      public static ArrayList<Integer> SortedList(int n) {
+          ArrayList<Integer> A = new ArrayList<Integer>(42);
+          for(int i = 0; i < n; i++) {
+              A.add(i+1);
+          }
+          return A;
+      }
+
+      public static ArrayList<Integer> ReverseSortedList(int n) {
+          ArrayList<Integer> A = new ArrayList<>(n);
+          for(int i = 0; i < n; i++) {
+              A.add(n-i);
+          }
+          return A;
+      }
+
+      public static ArrayList<Integer> RandomList(int n) {
+          ArrayList<Integer> A = new ArrayList<>(n);
+          ThreadLocalRandom generator = ThreadLocalRandom.current();
+          for(int i = 0; i < n; i++) {
+              A.add(generator.nextInt());
+          }
+          return A;
+      }
+
+      public static void ArrayListPrettyPrint(ArrayList<Integer> A) {
+          System.out.print("[" + A.get(0));
+          for(int i = 1; i < A.size(); i++) {
+              System.out.print(", " + A.get(i));
+          }
+          System.out.println("]");
+      }
+
+      public static void main(String[] args) {
+          int n;
+          ArrayList<Integer> input;
+          long start,end;
+
+          n = 42000000;
+          System.out.println("n = " + n);
+          input = SortedList(n);
+          //Best case.
+          long[] bestcaseruns = new long[3];
+          for(int i = 0; i < 3; i++) {
+              start = System.currentTimeMillis();
+              InsertionSort(input);
+              end = System.currentTimeMillis();
+              //This print freezes emacs because of the size of the output.
+              //System.out.println("Sorted List Input:");
+              //ArrayListPrettyPrint(input);
+              System.out.println("Took " + (end-start) + " milliseconds.");
+              bestcaseruns[i] = end-start;
+          }
+          System.out.println("Average time: " + ((bestcaseruns[0]+bestcaseruns[1]+bestcaseruns[2])/3));
+
+          n = 42000;
+          System.out.println("n = " + n);
+
+          //Worst case.
+          long[] worstcaseruns = new long[3];
+          for(int i = 0; i < 3; i++) {
+              input = ReverseSortedList(n);
+              start = System.currentTimeMillis();
+              InsertionSort(input);
+              end = System.currentTimeMillis();
+              //This print freezes emacs because of the size of the output.
+              //System.out.println("Sorted List Input:");
+              //ArrayListPrettyPrint(input);
+              System.out.println("Took " + (end-start) + " milliseconds.");
+              worstcaseruns[i] = end-start;
+          }
+          System.out.println("Average time: " + ((worstcaseruns[0]+worstcaseruns[1]+worstcaseruns[2])/3));
+
+          n = 42000;
+          System.out.println("n = " + n);
+
+          //Random case.
+          long[] randomcaseruns = new long[3];
+          for(int i = 0; i < 3; i++) {
+              input = RandomList(n);
+              start = System.currentTimeMillis();
+              InsertionSort(input);
+              end = System.currentTimeMillis();
+              //This print freezes emacs because of the size of the output.
+              //System.out.println("Sorted List Input:");
+              //ArrayListPrettyPrint(input);
+              System.out.println("Took " + (end-start) + " milliseconds.");
+              randomcaseruns[i] = end-start;
+          }
+          System.out.println("Average time: " + ((randomcaseruns[0]+randomcaseruns[1]+randomcaseruns[2])/3));
+
+
+      }
+  }
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+n = 42000
+Took 961 milliseconds.
+Took 968 milliseconds.
+Took 990 milliseconds.
+Average time: 973
+n = 42000
+Took 728 milliseconds.
+Took 735 milliseconds.
+Took 732 milliseconds.
+Average time: 731
+#+end_example
+
+#+begin_example
+n = 42000000
+Took 112 milliseconds.
+Took 124 milliseconds.
+Took 104 milliseconds.
+Average time: 113
+n = 42000
+Took 2672 milliseconds.
+Took 1177 milliseconds.
+Took 1175 milliseconds.
+Average time: 1674
+n = 42000
+Took 778 milliseconds.
+Took 780 milliseconds.
+Took 765 milliseconds.
+Average time: 774
+#+end_example
+
+Best case constant:   113 / 42000000 = 0,00000269
+Worst case constant: 1674 /   42000² = 0,000000949
+Worst case constant without running best case first: 974 / 42000² = 0,000000552
+
+* 2. Asymptotic analysis of function
+f(n) = 0.1 n² + 5 n + 25
+
+f(n)/n² = 0.1      + 5(1/n)  + 25/n² -> 0.1 > 0 => f(n) = θ(n²)
+f(n)/n³ = 0.1(1/n) + 5(1/n²) + 25/n³ -> 0   = 0 => f(n) = o(n³)
+
+* 3. Function in Increasing Asymptotic Order
+The functions are:
+1, log(n), sqrt(n), n/(log(n)), n, n*log(n), n*sqrt(n), n², n³, n¹⁰, 2ⁿ
+
+As o is transitive, it is enough to show that f(n) = o(g(n)) for neighbouring pairs.
+1 / log(n) -> 0 => 1 = o(log(n))
+  Trivial, 1 is the constant function and log(n) is a growing function. ✓
+
+log(n) / sqrt(n) = log(n) / n^(1/2) -> 0 => log(n) = o(sqrt(n))
+  It is known that all logarithms are lesser than all polynomials. ✓
+
+sqrt(n) / (n/log(n)) = (sqrt(n)*log(n)) / n = (n^(1/2)*log(n)) / n = log(n) / n^(1/2) -> 0 
+  => sqrt(n) = o(n/log(n))
+  It is known that all logarithms are lesser than all polynomials. ✓
+
+(n/log(n)) / n = n / (n*log(n)) = 1 / log(n) -> 0 => (n/log(n)) = o(n)
+  1 / log(n) was already found to be -> 0. ✓
+
+n / (n*log(n) = 1 / log(n) -> 0 => n = o (n*log(n))
+  Same as previous. ✓
+
+(n*log(n)) / (n/sqrt(n)) = log(n)/sqrt(n) -> 0 => n*log(n) = o(n/sqrt(n)
+  Also seen before. ✓
+
+(n*sqrt(n)) / n² = sqrt(n) / n = n^(1/2) / n -> 0 => n*sqrt(n) = o(n²)
+  A polynomial divided by a greater polynomial goes toward 0. ✓
+
+n² / n³ = 1 / n -> 0 => n² = o(n³)
+  1 / n is trivial for the same reason as the first one. ✓
+
+n³ / n¹⁰ = 1 / n⁷ -> 0 => n³ = o(n¹⁰)
+  1 / n⁷ is trivial for the same reason as the first one. ✓
+
+n¹⁰ / 2ⁿ -> 0 => n¹⁰ = o(2ⁿ)
+  See slides from week 7. :)
+
+* 4. Exercise 3.1-4 p. 53
+2ⁿ⁺¹ = 2 * 2ⁿ, which is θ(2ⁿ), which is also O(2ⁿ).
+
+2²ⁿ = 2ⁿ * 2ⁿ. 2ⁿ / (2ⁿ* 2ⁿ) = 1 / 2ⁿ -> 0 => 2ⁿ = o(2²ⁿ) => 2²ⁿ ≠ O(2ⁿ).
+
+* 5. Exercise 3.2-3 p. 60
+n! = o(nⁿ)
+n! can be split up such that n*(n-1)*...*(n/2)*...*2*1.
+This means that when n! is divided by nⁿ, the fraction can be split up into
+terms that are <= 1 ((n/n), ((n-1/n), ...)
+and terms that are <= ½ (((n/2)/n), (((n/2)-1)/n, ...)
+
+That means that n!/nⁿ is <= 1*1*...*1*1*½*½*...*½*½ -> 0 as n -> ∞.
+This leads to the conclusion that n! = 0(nⁿ)
+
+
+n! = ω(2ⁿ)
+2ⁿ/n! can be split up in terms such that (2/n) * (2/(n-1)) * ... * (2/2) * (2/1).
+The first term is 2/n, the last term is 2.
+The rest of the terms are <= 1.
+This means that 2ⁿ/n! <= (2/n) * 1 * ... * 1 * 2 = 4/n -> 0 for n -> inf.
+This means that 2ⁿ = o(n!) <=> n! = ω(2ⁿ)
+
+
+log(n!) = θ(n*log(n))
+log(n!) = log(1*2*3*....*n) = log(1) + log(2) + log(3) + ...  + log(n/2) + ... + log(n).
+
+This sum is clearly less than n * log(n). (all n terms are at most log(n))
+This leads trivially to the log(n!) = O(n * log(n)) bound.
+
+This sum is also greater than n/2 * log(n/2), as n/2 of the terms are at least log(n/2).
+n/2 * log(n/2) = n/2 * ( log(n) - (log(2) ) = ½n*log(n) - ½n*log(2) <= log(n!)
+The final inequality here leads to the Ω(n*log(n)) bound. (½n*log(n) - ½n*log(2) = θ(n*log(n)))
+
+log(n!) = O(n*log(n)) ∧ log(n!) = Ω(n*log(n)) => log(n!) = θ(n*log(n))
+
+* 6. Exercise 3.1-1 p. 52
+h(x) = max(f(x),g(x))
+
+Use the following two properties:
+h(x) <= f(x) + g(x)
+f(x) + g(x) <= 2 h(x)
+
+The first one is quite clear. If one of f(x) or g(x) is 0, then h = the other one.
+Hence, f(x) + g(x) cannot be smallet than h(x), only greater than or equal.
+
+The second one comes from the fact that if one of them is greater than the other,
+then their sum is less than the the largest one summed with itself, hence the less
+than part of the relation. The equal part comes from the case where they are equal,
+as in that face f(x) = g(x) = max(f(x),g(X)) = h(x).
+
+Since h(x) <= f(x) + g(x) <= 2h(x), h(x) = θ( f(x) + g(x) )
+

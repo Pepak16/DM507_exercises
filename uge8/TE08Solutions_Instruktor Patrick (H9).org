@@ -1,0 +1,392 @@
+* 1. Exam June 2008 Task 2
+log₂n, (log₁₀n)², sqrt(n), n, 2ⁿ
+
+log₂n = o((log₁₀n)²)
+log base doesn't matter as they are constant diff.
+log(n) / log(n)² = 1 / log(n) -> 0.
+
+The rest follows from slide 19 and 20 from the lecture 13. feb.
+
+* 2. Exam June 2011 Task 2
+** (a)
+Let f_a be one of the f functions, f_b be the other one.
+The same for the g functions, with g_a being asymptotically no less than f_a
+  and the same for g_b and f_b.
+
+If f_a is asymptotically equal to f_b, then f_a + f_b is only different from
+  either by a constant factor and the relation trivially holds.
+If f_a is Ω f_b, then g_a is Ω f_b due to transitivity.
+This means that f_a is θ(f_a+f_b), meaning that regardless of g_b, since
+  g_a = Ω(f_a) = θ(f_a+f_b), g_a+g_b must be Ω(f_a) as well.
+
+This means that f₁(n)+f₂(n) = O(g₁(n)+g₂(n)).
+Therefore, the statement is true.
+
+** (b)
+due to the same argument as in (a), the statement must be true as well.
+(it is the same statement, just stated in the reverse order.)
+
+** (c)
+This is not necessarily true.
+
+Counterexample:
+f₁(n) = n
+f₂(n) = 1
+
+left hand side: n/1 = n
+
+g₁(n) = n²
+g₂(n) = n²
+n = O(n²)
+1 = O(n²)
+
+right hand side: n²/n² = 1
+
+n ≠ O(1)
+
+* 3. Exam January 2007 Task 3
+These are answered by using the strict ordering presented at slide 20 from
+the lecture 13. feb.
+** 1.
+n² = Ω(n)
+Yes.
+(n²/n = n -> ∞)
+
+** 2.
+n = θ(n²)
+No.
+(n/n² = 1/n -> 0)
+
+** 3.
+nlogn = o(n²)
+Yes.
+(nlogn/n² = logn/n -> 0)
+
+** 4.
+logn = O(sqrt(n))
+Yes. If there for all constants c exists an n s.t. sqrt(n) is greather than
+logn, then surely there exists such a constant c.
+
+Based on definitions on slides 12 and 14 from the same lecture.
+
+** 5.
+
+n! = ω(2ⁿ)
+True.
+
+This was proven in exercise class II of week seven, 5. item on the list of
+  exercises.
+
+* 4. Merge Sort
+#+BEGIN_SRC java :classname MergeSorter :cmdline "MergeSorter" :results output
+  import java.util.Collections;
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.concurrent.ThreadLocalRandom;
+
+  public class MergeSorter {
+      public static void MergeSort(int[] A) {
+          MergeSort(A, 0, A.length-1);
+      }
+
+      public static void MergeSort(int[] A,int p,int r) {
+          if(p < r) {
+              int q = (p+r)/2; //Integer division by default since they're integers.
+              MergeSort(A,p,q);
+              MergeSort(A,q+1,r);
+              Merge(A,p,q,r);
+          }
+      }
+
+      public static void Merge(int[] A,int p,int q,int r) {
+          System.err.println("Merge called with: p=" + p + ", q=" + q + ", r=" + r);
+          int n1 = q-p+1;
+          int n2 = r-q;
+          int[] L = new int[n1+1];
+          int[] R = new int[n2+1];
+          for(int i = 0; i < n1; i++) {
+              L[i] = A[p+i];
+          }
+          for(int j = 0; j < n2; j++) {
+              System.err.println("R Copy-iteration: " + j);
+              System.err.println("  Copying element at A index: " + (q+1+j));
+              R[j] = A[q+1+j];
+          }
+          L[n1] = Integer.MAX_VALUE;
+          R[n2] = Integer.MAX_VALUE;
+          int i = 0;
+          int j = 0;
+          for(int k = p; k <= r; k++) {
+              System.err.println("Iteration k=" + k);
+              if(L[i] <= R[j]) {
+                  A[k] = L[i];
+                  i++;
+              } else {
+                  A[k] = R[j];
+                  j++;
+              }
+          }
+      }
+
+      public static int[] SortedArray(int n) {
+          int[] A = new int[n];
+          for(int i = 0; i < n; i++) {
+              A[i] = (i+1);
+          }
+          return A;
+      }
+
+      public static int[] ReverseSortedArray(int n) {
+          int[] A = new int[n];
+          for(int i = 0; i < n; i++) {
+              A[i] = (n-i);
+          }
+          return A;
+      }
+
+      public static int[] RandomArray(int n) {
+          int[] A = new int[n];
+          ThreadLocalRandom generator = ThreadLocalRandom.current();
+          for(int i = 0; i < n; i++) {
+              //Avoid having Integer.MAX_VALUE in the input.
+              int random_int = generator.nextInt();
+              while(random_int == Integer.MAX_VALUE) {
+                  random_int = generator.nextInt();
+              }
+              A[i] = random_int;
+          }
+          return A;
+      }
+
+      public static void ArrayPrettyPrint(int[] A) {
+          System.out.print("[" + A[0]);
+          for(int i = 1; i < A.length; i++) {
+              System.out.print(", " + A[i]);
+          }
+          System.out.println("]");
+      }
+
+      public static double MergeSort_RuntimeTest_RandomInput(int n) {
+          int[] input;
+          long start,end;
+
+          System.out.println("n = " + n);
+          //Best case.
+          long[] runtimes = new long[3];
+          for(int i = 0; i < 3; i++) {
+              input = RandomArray(n);
+              start = System.currentTimeMillis();
+              MergeSort(input);
+              end = System.currentTimeMillis();
+              //This print freezes emacs because of the size of the output.
+              //System.out.println("Sorted List Input:");
+              //ArrayPrettyPrint(input);
+              runtimes[i] = end-start;
+              System.out.println("Took " + runtimes[i] + " milliseconds.");
+          }
+          long average = ((runtimes[0]+runtimes[1]+runtimes[2])/3);
+          System.out.println("Average time: " + average);
+          double normalized_average = (average/(n*(Math.log(n)/Math.log(2))));
+          System.out.println("Average normalized by runtime form at input size: " + normalized_average + "\n");
+
+          return normalized_average;
+      }
+
+      public static void main(String[] args) {
+          double[] normalized_average_runtimes = new double[5];
+
+          for(int i = 1; i <= 5; i++) {
+              normalized_average_runtimes[i-1] = MergeSort_RuntimeTest_RandomInput(i*3000);
+          }
+
+
+          double average_normalized = 0;
+          for(double d :  normalized_average_runtimes) {
+              average_normalized += d;
+          }
+          average_normalized /= normalized_average_runtimes.length;
+
+          System.out.println("Average normalized runtime: " + average_normalized);
+
+          double[] deviations = new double[normalized_average_runtimes.length];
+          for(int i = 0; i < deviations.length; i++) {
+              deviations[i] = Math.abs(normalized_average_runtimes[i]-average_normalized);
+          }
+
+          double average_deviation = 0;
+          for(double d :  deviations) {
+              average_deviation += d;
+          }
+          average_deviation /= deviations.length;
+
+          System.out.println("Average deviation from normalized average: " + average_deviation);
+      }
+  }
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+n = 3000
+Took 247 milliseconds.
+Took 224 milliseconds.
+Took 223 milliseconds.
+Average time: 231
+Average normalized by runtime form at input size: 0.0066662356495805755
+
+n = 6000
+Took 476 milliseconds.
+Took 472 milliseconds.
+Took 468 milliseconds.
+Average time: 472
+Average normalized by runtime form at input size: 0.006267887322711574
+
+n = 9000
+Took 747 milliseconds.
+Took 739 milliseconds.
+Took 747 milliseconds.
+Average time: 744
+Average normalized by runtime form at input size: 0.006293277726092456
+
+n = 12000
+Took 1032 milliseconds.
+Took 1031 milliseconds.
+Took 1033 milliseconds.
+Average time: 1032
+Average normalized by runtime form at input size: 0.006346513691242866
+
+n = 15000
+Took 1326 milliseconds.
+Took 1311 milliseconds.
+Took 1325 milliseconds.
+Average time: 1320
+Average normalized by runtime form at input size: 0.006343405346084448
+
+Average normalized runtime: 0.006383463947142384
+Average deviation from normalized average: 1.1310868097527682E-4
+#+end_example
+
+1.1310868097527682E-4 is equal to 0.00011310868097527682
+
+The average deviation from the average is pretty small. The factor we are trying to examine indeed looks close to constant.
+
+* 5. Problem 2-4
+** d.
+The procedure will simply be called mergesort here due to lack of creativity.
+
+*** Description of modified mergesort
+Mergesort
+When calling mergesort on the partition of the list, the number of inversions in
+that list is returned.
+Store the values of the recursive calls.
+Merge the lists with the merge procedure. This returns a merged list and the
+number of inversions in the concatenated list.
+sum the three inversion counts and return the merged list and the sum.
+
+Merge
+When merging maintain a variable, inv, along with the list. Initialize it as 0 in
+the beginning.
+In the merge step, when R[j] is smaller than L[i], the number of remaining 
+elements in L is added to inv.
+Return inv along with the merged list.
+
+Why it works:
+Let L be the half of the list with the lower indexes and R the half with the
+greater indexes.
+When you have a list LR, then the number of inversions is the same as the number
+of inversions in L and the number of inversions in R AND the number of
+inversions that span across them.
+The number of inversions in L and R and found by the recursive calls.
+The number of inversions spanning across them is found in the merge step.
+The number of inversions spanning across them is unaltered by merging L and R as
+the relative positions ("having a higher index and a lower value"-relationship)
+doesn't change. (they were sorted separately in isolation)
+
+The number of inversions in L and R are found in the two recursive calls and the
+number of inversions spanning between them is found in the merge step.
+Summing those three values up gives the number of inversions in LR.
+
+*** Illustration based on the example input in the book
+the | symbol illustrate the border between L (2,3) and R (8,6,1).
+The "paths" on the above side of the array illustrate "inner inversions" and
+"paths" on the lower side of the array illustrate inversion across L and R.
+
+         /¨¨¨¨¨¨\
+        //¨\ /¨¨\\
+[2,3, | 8,  6,   1]
+ \ \____________//
+  \_____________/
+
+The number of inversions across L and R is unaffected by sorting L and R:
+[2,3, | 1,  6,   8]
+ \ \__ //
+  \____/
+
+So by finding those two inversions and adding them to the three inversions
+already known, the same number of inversions would be counted.
+
+*** Execution example based on the example input in the book
+A = [2,3,8,6,1]
+inv = 0
+
+Splits:
+    ([2,3], [8,6,1])
+    ( ([2],[3]), ([8],[6,1]) )
+    ( ([2],[3]), ([8], ([6],[1]) ) )
+
+First L=[2] and R=[3] are merged.
+2 < 3 => 2 is taken from L.
+L is now empty, causing the remaining elements in R to be taken in order.
+inv = 0.
+New situation: ([2,3], ([8], ([6],[1]) ) )
+The number of inversion returned by the call to mergesort will be 3, as:
+  mergesort on L gave 0 inversions (singleton)
+  mergesort on R gave 0 inversions (singleton)
+  The merge of L and R gave 0 inversions
+  The total number of inversions in that slice of the list is 0.
+
+Next, L=[6] and R=[1] are merged.
+6 > 1.
+This means that since there is one element left in L, inv is increased by 1.
+inv = 1
+New situation: ([2,3], ([8], [1,6]) )
+The number of inversion returned by the call to mergesort will be 3, as:
+  mergesort on L gave 0 inversions (singleton)
+  mergesort on R gave 0 inversions (singleton)
+  The merge of L and R gave 1 inversions
+  The total number of inversions in that slice of the list is 1.
+
+Next, L=[8] and R=[1,6] are merged.
+8 > 1.
+There is 1 element in L.
+inv = 1
+8 > 6
+There is 1 element in L.
+inv = 2
+New situation: ([2,3], [1,6,8] )
+The number of inversion returned by the call to mergesort will be 3, as:
+  mergesort on L gave 0 inversions (singleton)
+  mergesort on R gave 1 inversions
+  The merge of L and R gave 2 inversions
+  The total number of inversions in that slice of the list is 3.
+
+finally, L=[2,3] and R=[1,6,8] are merged.
+2 > 1
+There are 2 elements in L.
+inv = 2
+2 < 6
+3 < 6
+L is now empty, causing the remaining elements in R to be taken in order.
+new situation: [1,2,3,6,8]
+The number of inversion returned by the call to mergesort will be 5, as:
+  mergesort on L gave 0 inversions
+  mergesort on R gave 3 inversions
+  The merge of L and R gave 2 inversions
+  The total number of inversions in the list is 5.
+
+
+The number of inversion found was 5 as expected.
+Furthermore, the "offending" elements involved in that count were the same as
+would have been the "offending" elements if we had gone through the naive method
+of comparing each element with all others in either index direction (the same 
+index direction for all  elements).
+

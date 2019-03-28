@@ -1,0 +1,162 @@
+* 1. Exercise 2.1-1 p. 22
+|   | 31 | 41 | 59 | 26 | 41 | 58 |
+|---+----+----+----+----+----+----|
+| 1 | 31 | 41 | 59 | 26 | 41 | 58 |
+| 2 | 31 | 41 | 59 | 26 | 41 | 58 |
+| 3 | 26 | 31 | 41 | 59 | 41 | 58 |
+| 4 | 26 | 31 | 41 | 41 | 59 | 58 |
+| 4 | 26 | 31 | 41 | 41 | 58 | 59 |
+|---+----+----+----+----+----+----|
+
+* 2. Exercise 2.1-3 p. 22
+0-indexing is used in this snippet.
+Array entries are assumed unique.
+Pseudo code for linear search:
+#+BEGIN_SRC 
+search(A,v)
+  i = 0
+  found = false
+  n = length of A
+  while i < n and found is false
+    if v equal A[i]
+      found = true
+    i = i + 1
+  if found is false
+    i = NIL
+  return i
+#+END_SRC
+
+The idea is that the condition is initially true. No element has been found and as such found is false.
+When the loop starts an iteration, there are two cases:
+  1. found is true, in which case the loop terminates.
+     Hence, v exists in the array and has been found on index i.
+  2. found is false, in which case the presence of v in the array is unknown.
+     If A[i] is different from v, it has not been found and found remains false.
+     If A[i] is equal to v, found is set to true, as v has been found.
+The procedure always terminates as i will become equal to n in finite time, causing the termination,
+regardless of whether v exists in the array or not.
+
+* 3. Exercise 2.2-3 p. 29
+For the linear search procedure, if a search for an existing element is made, and that element is
+equally likely to be any element in the array, what are the:
+ * Average number of checked elements?
+   * Given that all elements are equally likely to be the one sought after, the average number of
+     elements checked is (n+1)/2.
+     This is because the sum of 1 to n divided by n, which is ((n*(n+1))/2)/n = (n+1)/2, is the 
+     average of the number of checks required for all possible, equallly likely, placements of the
+     sought after element.
+ * Worst case number of checks?
+   * The worst case is that the number of checks is the number of elements.
+     Therefore, the worst case number of checks is n.
+ * Base case number of checks?
+   * The best case is that the number of checks is exactly 1, only checking the first element.
+ * Average-case running time in θ-notation?
+   * θ((n+1)/2) = θ(n)
+ * Worst-case running time in θ-notation?
+   * θ(n)
+ * Best-case running time in θ-notation?
+   * θ(1)
+
+* 4. Exercise 2.3-5 p. 39
+#+BEGIN_SRC 
+binary_search(A,v)
+  n = length of A
+  if n equal 0
+    return NIL
+  
+  i = n "integer division" 2
+  if v equal A[i]
+    return i
+  else if v less than A[i]
+    return binary_search(A[0..(i-1)],v)
+  else
+    return binary_search(A[(i+1)..n],v)
+#+END_SRC
+
+The size of the array that is searched is roughly halved. This can be done θ(log(n)) times.
+Only constant time operations are performed each time this halving is performed.
+
+* 5. Exercise 2.3-6 p. 39
+No, insertion sort moves all the elements, which takes linear time regardless of how you find the 
+location into which the element belongs.
+
+* 6. Exercise 2.3-1 p. 37
+
+A = [3,41,52,26,38,57,9,49]
+
+Merge Sort:
+Merge([ 3],[41]) = [ 3,41]
+Merge([52],[26]) = [26,52]
+Merge([38],[57]) = [38,57]
+Merge([ 9],[49]) = [ 9,49]
+
+
+[ 3] [41] [52] [26] [38] [57] [ 9] [49]
+  \   /     \   /     \   /     \   /
+ [ 3,41]   [26,52]   [38,57]   [ 9,49]
+     \       /           \       /
+   [ 3,26,41,52]       [ 9,38,49,57]
+          \                 /
+       [ 3, 9,26,38,41,49,52,57]
+
+* 7. Exercise 2.3-2 p. 37
+Merge(A,p,q,r)
+  "Copy input elements the same way as in the book except the sentinels"
+  i = 0
+  j = 0
+  for k = p to r:
+    if i >= L.length
+      A[k] = R[j]
+      j++
+    else if j >= R.length
+      A[k] = L[i]
+      i++
+    else
+      if L[i] <= R[j]
+        A[k] = L [i]
+        ii
+      else
+        A[k] = R[j]
+        j++
+
+* 8. Problem 2-4 p. 41
+** a.
+Array: [2,3,8,6,1]
+List the five inversions of the array.
+(1,5), (2,5), (3,4), (3,5), (4,5)
+
+** b.
+The array with elements from the set {1,2,..,n} with the most inversions is the array sorted in
+decreasing order. The number of inversions is then (n-1)+(n-2)+...+1+0, which is the maximal number
+of inversions that can be achieved.
+
+** c.
+The insertion sort algorithm works by eliminating these inversions. Hence, a greater  number of 
+inversions correlate positively with greater running time of insertion sort, with the greatest possible
+number of invetsions achievable equivalating the setup for the worst case input for insertion sort.
+
+Specifically, one inversion is one value swap in the backwards scan.
+
+* 9. Exercise 2.3-7 p. 39
+Method 0 (bad)
+sum each number with each other number?
+Takes n² time, not n*log(n)
+
+Method 1 (good)
+Sort the input array, A, in θ(n*log(n)) time.
+For each a in A, calculate x-a and use binary search to search for it.
+If the search finds x-a, then that number and a together sum to x and the task is done.
+
+Method 2 (good)
+ Sort the input array, A, in θ(n*log(n)) time.
+Create a new array, B, where B[i] = x-A[i].
+Reverse the order of B. (can be done in linear time)
+If the two arrays have an element in common, then that number is the other number in the sum to x.
+Since both arrays are sorted, a modified version of the merge procedure can be used.
+  The modified merge will in the case that the values are different, discard the smaller one.
+  In the case that they are the same, it now has the second value, b. Then a = x-b.
+    Note, x = a + b.
+If one of the arrays run out of elements, then there does not exist such an element and there are not
+  two values in the array that sum to x.
+
+
